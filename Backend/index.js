@@ -43,7 +43,7 @@ app.use((err, req, res, next) => {
 });
 
 // Start server
-const PORT = process.env.PORT || 5050;
+const PORT = process.env.PORT || 9705;
 app.listen(PORT, () => {
   console.log(`Server is running at http://localhost:${PORT} (${process.env.NODE_ENV || "development"})`);
 });

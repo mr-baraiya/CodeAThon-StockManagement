@@ -82,6 +82,10 @@ export const AuthProvider = ({ children }) => {
     return authService.hasMinimumRole(role);
   };
 
+  const hasRole = (role) => {
+    return authService.hasRole(role);
+  };
+
   const value = {
     user,
     token,
@@ -95,6 +99,7 @@ export const AuthProvider = ({ children }) => {
     isManager,
     isStaff,
     hasMinimumRole,
+    hasRole,
   };
 
   return (

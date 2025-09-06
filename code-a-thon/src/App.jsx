@@ -23,6 +23,14 @@ import RegisterForm from './components/auth/RegisterForm';
 // User Components
 import UserProfile from './components/user/UserProfile';
 
+// Staff Components
+import { 
+  StaffStockManagement, 
+  StaffProductView, 
+  StaffBillManagement, 
+  StaffSalesReports 
+} from './components/staff';
+
 // import './App.css';
 
 function App() {
@@ -73,6 +81,40 @@ function App() {
                 element={
                   <ProtectedRoute adminOnly={true}>
                     <AdminPage />
+                  </ProtectedRoute>
+                } 
+              />
+
+              {/* Staff Routes */}
+              <Route 
+                path="/staff/stock" 
+                element={
+                  <ProtectedRoute requiredRole="staff">
+                    <StaffStockManagement />
+                  </ProtectedRoute>
+                } 
+              />
+              <Route 
+                path="/staff/products" 
+                element={
+                  <ProtectedRoute requiredRole="staff">
+                    <StaffProductView />
+                  </ProtectedRoute>
+                } 
+              />
+              <Route 
+                path="/staff/billing" 
+                element={
+                  <ProtectedRoute requiredRole="staff">
+                    <StaffBillManagement />
+                  </ProtectedRoute>
+                } 
+              />
+              <Route 
+                path="/staff/reports" 
+                element={
+                  <ProtectedRoute requiredRole="staff">
+                    <StaffSalesReports />
                   </ProtectedRoute>
                 } 
               />

@@ -4,6 +4,7 @@ import { useAuth } from '../context/AuthContext';
 import { dashboardService, productService } from '../services';
 import { formatCurrency, formatDate, handleApiError } from '../utils/helpers';
 import LoadingSpinner from '../components/common/LoadingSpinner';
+import StaffDashboard from '../components/staff/StaffDashboard';
 import { 
   CubeIcon,
   CurrencyRupeeIcon,
@@ -20,6 +21,11 @@ const Dashboard = () => {
   const [dashboardData, setDashboardData] = useState(null);
   const [lowStockProducts, setLowStockProducts] = useState([]);
   const [loading, setLoading] = useState(true);
+
+  // Redirect staff users to their dedicated dashboard
+  if (user?.role === 'staff') {
+    return <StaffDashboard />;
+  }
 
   useEffect(() => {
     fetchDashboardData();
