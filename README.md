@@ -3,6 +3,8 @@
 Welcome to **CodeAThon-StockManagement**!  
 This project is designed to help manage stock efficiently, providing features for tracking, updating, and reporting inventory levels.
 
+## Live URL : https://code-a-thon-stock-management.vercel.app
+
 ## Features
 
 - Add, update, and delete stock items
