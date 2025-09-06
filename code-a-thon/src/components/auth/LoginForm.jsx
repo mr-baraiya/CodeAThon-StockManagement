@@ -13,7 +13,9 @@ import {
   SparklesIcon 
 } from '@heroicons/react/24/outline';
 import { useAuth } from '../../context/AuthContext';
+import { handleApiSuccess, handleApiError } from '../../utils/helpers';
 import LoadingSpinner from '../common/LoadingSpinner';
+import DemoCredentials from './DemoCredentials';
 
 const LoginForm = () => {
   const [loading, setLoading] = useState(false);
@@ -25,6 +27,7 @@ const LoginForm = () => {
     register,
     handleSubmit,
     formState: { errors },
+    setValue,
   } = useForm();
 
   const onSubmit = async (data) => {
@@ -32,32 +35,19 @@ const LoginForm = () => {
     try {
       const response = await login(data);
       if (response.success) {
-        toast.success('🎉 Login successful! Welcome back!', {
-          position: "top-right",
-          autoClose: 3000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "colored",
-        });
+        handleApiSuccess('🎉 Login successful! Welcome back!');
         navigate('/dashboard');
       }
     } catch (error) {
-      toast.error(error.response?.data?.message || 'Login failed. Please try again.', {
-        position: "top-right",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "colored",
-      });
+      handleApiError(error, 'Login failed. Please check your credentials and try again.');
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleDemoUserSelect = (user) => {
+    setValue('email', user.email);
+    setValue('password', user.password);
   };
 
   return (
@@ -209,6 +199,9 @@ const LoginForm = () => {
             </motion.div>
           </form>
         </motion.div>
+
+        {/* Demo Credentials Component */}
+        <DemoCredentials onSelectUser={handleDemoUserSelect} />
       </motion.div>
     </div>
   );

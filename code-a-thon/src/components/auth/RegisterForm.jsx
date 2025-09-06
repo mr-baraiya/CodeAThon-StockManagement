@@ -3,8 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useForm } from 'react-hook-form';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
-import { toast } from 'react-toastify';
-import Swal from 'sweetalert2';
+import { handleApiSuccess, handleApiError, showSuccessAlert, handleValidationErrors } from '../../utils/helpers';
 import LoadingSpinner from '../common/LoadingSpinner';
 import { 
   UserIcon, 
@@ -40,64 +39,23 @@ const RegisterForm = () => {
       const response = await registerUser(data);
       if (response.success) {
         // SweetAlert2 success notification
-        await Swal.fire({
-          title: 'Registration Successful! 🎉',
-          text: 'Your account has been created successfully. Welcome aboard!',
-          icon: 'success',
-          showConfirmButton: false,
-          timer: 2000,
-          timerProgressBar: true,
-          background: '#ffffff',
-          color: '#1f2937',
-          customClass: {
-            popup: 'rounded-2xl shadow-2xl',
-            title: 'text-2xl font-bold text-gray-900',
-            content: 'text-gray-600'
-          }
-        });
+        await showSuccessAlert(
+          'Registration Successful! 🎉',
+          'Your account has been created successfully. Welcome aboard!'
+        );
         
         // Toast notification
-        toast.success('🎉 Account created successfully! Redirecting to login...', {
-          position: "top-right",
-          autoClose: 3000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "colored",
-        });
+        handleApiSuccess('🎉 Account created successfully! Redirecting to login...');
         
         setTimeout(() => navigate('/login'), 2000);
       }
     } catch (error) {
-      // SweetAlert2 error notification
-      Swal.fire({
-        title: 'Registration Failed',
-        text: error.response?.data?.message || 'Something went wrong. Please try again.',
-        icon: 'error',
-        confirmButtonText: 'Try Again',
-        confirmButtonColor: '#ef4444',
-        background: '#ffffff',
-        color: '#1f2937',
-        customClass: {
-          popup: 'rounded-2xl shadow-2xl',
-          title: 'text-xl font-bold text-gray-900',
-          content: 'text-gray-600'
-        }
-      });
-      
-      // Toast notification
-      toast.error(error.response?.data?.message || 'Registration failed. Please try again.', {
-        position: "top-right",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "colored",
-      });
+      // Handle validation errors
+      if (error.errors) {
+        handleValidationErrors(error.errors);
+      } else {
+        handleApiError(error, 'Registration failed. Please check your information and try again.');
+      }
     } finally {
       setLoading(false);
     }

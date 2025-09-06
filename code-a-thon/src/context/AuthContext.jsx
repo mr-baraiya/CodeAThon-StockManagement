@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { userService } from '../services/userService';
+import { authService } from '../services';
 
 const AuthContext = createContext();
 
@@ -30,7 +30,7 @@ export const AuthProvider = ({ children }) => {
 
   const login = async (credentials) => {
     try {
-      const response = await userService.login(credentials);
+      const response = await authService.login(credentials);
       if (response.success) {
         setToken(response.token);
         setUser(response.user);
@@ -44,7 +44,7 @@ export const AuthProvider = ({ children }) => {
 
   const register = async (userData) => {
     try {
-      const response = await userService.register(userData);
+      const response = await authService.register(userData);
       return response;
     } catch (error) {
       throw error;
@@ -52,7 +52,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   const logout = () => {
-    userService.logout();
+    authService.logout();
     setToken(null);
     setUser(null);
   };
@@ -63,11 +63,23 @@ export const AuthProvider = ({ children }) => {
   };
 
   const isAuthenticated = () => {
-    return !!token && !!user;
+    return authService.isAuthenticated();
   };
 
   const isAdmin = () => {
-    return user?.role === 'admin';
+    return authService.hasRole('admin');
+  };
+
+  const isManager = () => {
+    return authService.hasRole('manager');
+  };
+
+  const isStaff = () => {
+    return authService.hasRole('staff');
+  };
+
+  const hasMinimumRole = (role) => {
+    return authService.hasMinimumRole(role);
   };
 
   const value = {
@@ -80,6 +92,9 @@ export const AuthProvider = ({ children }) => {
     updateUser,
     isAuthenticated,
     isAdmin,
+    isManager,
+    isStaff,
+    hasMinimumRole,
   };
 
   return (
